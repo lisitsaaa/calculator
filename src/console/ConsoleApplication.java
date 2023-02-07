@@ -14,12 +14,11 @@ import static console.util.ConsoleWriter.write;
 import static console.util.ConsoleWriter.writeError;
 
 
-public class ConsoleApplication implements Application {
+public class ConsoleApplication {
     private ConsoleSession consoleSession;
     private final UserService userService = new UserService();
     private final CalculatorService calculator = new CalculatorService();
-
-    @Override
+    
     public void run() {
         while (true) {
             if (consoleSession == null) {

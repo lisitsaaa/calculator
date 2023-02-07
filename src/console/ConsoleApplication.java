@@ -9,47 +9,39 @@ import validator.UserValidator;
 import java.util.List;
 import java.util.Optional;
 
+import static console.util.ConsoleMessage.*;
 import static console.util.ConsoleReader.*;
-import static console.util.ConsoleWriter.write;
-import static console.util.ConsoleWriter.writeError;
+import static console.util.ConsoleWriter.*;
 
 
 public class ConsoleApplication {
     private ConsoleSession consoleSession;
     private final UserService userService = new UserService();
     private final CalculatorService calculator = new CalculatorService();
-    
+
     public void run() {
         while (true) {
             if (consoleSession == null) {
-                write("""
-                        hello!
-                        1 - registration
-                        2 - authorization
-                        3 - exit""");
+                write(EXTERNAL_MENU);
 
                 switch (readInteger()) {
                     case 1 -> signUp();
                     case 2 -> logIn();
                     case 3 -> {
-                        write("see you!");
+                        write(BYE_MESSAGE);
                         return;
                     }
                 }
             } else {
-                write(consoleSession.getCurrentUser().getName() + ", you should make your choice");
-                write("""
-                        1 - calculator
-                        2 - history
-                        3 - logout
-                        4 - exit""");
+                write(consoleSession.getCurrentUser().getName() + CHOICE_MESSAGE);
+                write(INTERNAL_MENU);
 
                 switch (readInteger()) {
                     case 1 -> calculate(consoleSession);
                     case 2 -> chooseHistoryOperation();
                     case 3 -> consoleSession = null;
                     case 4 -> {
-                        write("see you!");
+                        write(BYE_MESSAGE);
                         return;
                     }
                 }
@@ -62,36 +54,40 @@ public class ConsoleApplication {
         return readString();
     }
 
-    private void signUp() {
-//        String username = readInfo("enter username");
-//        String password = readInfo("enter password");
+    private String validateUsername() {
+        boolean validator;
+        String username;
+        do {
+            username = readInfo(USERNAME_MESSAGE);
+            validator = UserValidator.isValidUsername(username);
+            if(!validator) writeError(username + INVALID_USERNAME);
+        } while (!validator);
+        return username;
+    }
 
-        String username = validateInfo("enter username", 1);
-        String password = validateInfo("enter password", 2);
-        String name = readInfo("enter name");
+    private String validatePassword() {
+        boolean validator;
+        String password;
+        do {
+            password = readInfo(PASSWORD_MESSAGE);
+            validator = UserValidator.isValidPassword(password);
+            if(!validator) writeError(password + INVALID_USERNAME);
+        } while (!validator);
+        return password;
+    }
+
+    private void signUp() {
+        String username = validateUsername();
+        String password = validatePassword();
+        String name = readInfo(NAME_MESSAGE);
 
         User regUser = new User(username, password, name);
         userService.create(regUser);
     }
 
-    private String validateInfo(String message, int code) {
-        boolean validator = false;
-        String info;
-        do {
-            info = readInfo(message);
-            switch (code) {
-                case 1 -> validator = UserValidator.isValidUsername(info);
-                case 2 -> validator = UserValidator.isValidPassword(info);
-            }
-        } while (!validator);
-        return info;
-    }
-
     private void logIn() {
-//        String username = readInfo("enter username");
-//        String password = readInfo("enter password");
-        String username = validateInfo("enter username", 1);
-        String password = validateInfo("enter password", 2);
+        String username = validateUsername();
+        String password = validatePassword();
 
         Optional<User> byUsername = userService.findByUsername(username);
         if (byUsername.isPresent()) {
@@ -99,25 +95,21 @@ public class ConsoleApplication {
             if (authorizationUser.getPassword().equals(password)) {
                 consoleSession = new ConsoleSession(authorizationUser);
             } else {
-                writeError("Wrong password!");
+                writeError(WRONG_PASSWORD_MESSAGE);
             }
         } else {
-            writeError("User not found!");
+            writeError(USER_NOT_FOUND_MESSAGE);
         }
     }
 
     public void calculate(ConsoleSession consoleSession) {
-        write("""
-                sum <- "+"
-                sub <- "-"
-                mul <- "*"
-                div <- "/" """);
+        write(OPERATION_TYPE_MENU);
         Optional<Operation.Type> type = readOperationType();
 
         if (type.isPresent()) {
             Operation.Type operationType = type.get();
 
-            write("enter numbers:");
+            write(NUMBERS_MESSAGE);
             List<Double> numbers = readDoubleList();
 
             Operation operate = new Operation(numbers, operationType, consoleSession.getCurrentUser());
@@ -125,7 +117,7 @@ public class ConsoleApplication {
 
             write(result.toString());
         } else {
-            writeError("incorrect type");
+            writeError(INCORRECT_TYPE);
         }
     }
 
@@ -149,11 +141,7 @@ public class ConsoleApplication {
     }
 
     private void chooseHistoryOperation() {
-        write("""
-                1 - get all info
-                2 - get info by id
-                3 - remove all info
-                4 - remove info by id""");
+        write(INFORMATION_MENU);
 
         switch (readInteger()) {
             case 1 -> {
@@ -161,13 +149,13 @@ public class ConsoleApplication {
                 allByUser.forEach(System.out::println);
             }
             case 2 -> {
-                write("enter id:");
+                write(ID_MESSAGE);
                 List<Operation> infoByInd = calculator.findByIdByUser(readInteger());
                 infoByInd.forEach(System.out::println);
             }
             case 3 -> calculator.removeAllByUser(consoleSession.getCurrentUser());
             case 4 -> {
-                write("enter id:");
+                write(ID_MESSAGE);
                 calculator.removeByIdByUser(readInteger());
             }
         }

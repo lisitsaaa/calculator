@@ -15,22 +15,22 @@ public class CalculatorService {
         switch ( operation.getType()) {
             case SUM -> {
                 operation.setResult(addition(operation.getNumbers()));
-                storage.save(operation);
+                saveOperation(operation);
                 return Optional.of(operation);
             }
             case SUB -> {
                 operation.setResult(subtraction(operation.getNumbers()));
-                storage.save(operation);
+                saveOperation(operation);
                 return Optional.of(operation);
             }
             case MUL -> {
                 operation.setResult(multiplication(operation.getNumbers()));
-                storage.save(operation);
+                saveOperation(operation);
                 return Optional.of(operation);
             }
             case DIV -> {
                 operation.setResult(division(operation.getNumbers()));
-                storage.save(operation);
+                saveOperation(operation);
                 return Optional.of(operation);
             }
         }
@@ -77,6 +77,13 @@ public class CalculatorService {
         return res;
     }
 
+    private void saveOperation(Operation operation){
+        Thread thread = new Thread(() -> {
+            storage.save(operation);
+        });
+        thread.start();
+    }
+
     public List<Operation> findAllByUser(User user) {
         return storage.findAll(user.getId());
     }
@@ -86,10 +93,14 @@ public class CalculatorService {
     }
 
     public void removeAll() {
-        storage.removeAll();
+        Thread thread = new Thread(storage::removeAll);
+        thread.start();
     }
 
     public void removeById(int id) {
-        storage.removeById(id);
+        Thread thread = new Thread(() -> {
+            storage.removeById(id);
+        });
+        thread.start();
     }
 }

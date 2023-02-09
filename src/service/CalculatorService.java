@@ -1,15 +1,14 @@
 package service;
 
 import entity.Operation;
-import entity.User;
-import storage.inMemory.InMemoryOperationStorage;
-import storage.inMemory.OperationStorage;
+import storage.JDBC.JDBCOperationStorage;
+import storage.JDBC.OperationStorage;
 
 import java.util.List;
 import java.util.Optional;
 
 public class CalculatorService {
-    private final OperationStorage storage = new InMemoryOperationStorage();
+    private final OperationStorage storage = new JDBCOperationStorage();
 
     public Optional<Operation> calculate(Operation operation) {
         switch ( operation.getType()) {
@@ -77,19 +76,19 @@ public class CalculatorService {
         return res;
     }
 
-    public List<Operation> findAllByUser(User user) {
-        return storage.findAll(user.getId());
-    }
-
-    public List<Operation> findByIdByUser(int id) {
-        return storage.findById(id);
-    }
-
-    public void removeAllByUser(User user) {
-        storage.removeAll(user.getId());
-    }
-
-    public void removeByIdByUser(int id) {
-        storage.removeById(id);
-    }
+//    public List<Operation> findAllByUser(User user) {
+//        return storage.findAll(user.getId());
+//    }
+//
+//    public List<Operation> findByIdByUser(int id) {
+//        return storage.findById(id);
+//    }
+//
+//    public void removeAllByUser(User user) {
+//        storage.removeAll(user.getId());
+//    }
+//
+//    public void removeByIdByUser(int id) {
+//        storage.removeById(id);
+//    }
 }

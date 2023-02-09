@@ -1,6 +1,7 @@
 package service;
 
 import entity.Operation;
+import entity.User;
 import storage.JDBC.JDBCOperationStorage;
 import storage.JDBC.OperationStorage;
 
@@ -76,19 +77,19 @@ public class CalculatorService {
         return res;
     }
 
-//    public List<Operation> findAllByUser(User user) {
-//        return storage.findAll(user.getId());
-//    }
-//
-//    public List<Operation> findByIdByUser(int id) {
-//        return storage.findById(id);
-//    }
+    public List<Operation> findAllByUser(User user) {
+        return storage.findAll(user.getId());
+    }
+
+    public Optional<Operation> findByIdByUser(int id) {
+        return storage.findById(id);
+    }
 //
 //    public void removeAllByUser(User user) {
 //        storage.removeAll(user.getId());
 //    }
-//
-//    public void removeByIdByUser(int id) {
-//        storage.removeById(id);
-//    }
+
+    public void removeById(int id) {
+        storage.removeById(id);
+    }
 }

@@ -15,9 +15,6 @@ public class InMemoryOperationStorage implements OperationStorage {
         store.add(operate);
     }
 
-    //date sort
-
-
     @Override
     public List<Operation> findAll(int userId) {
         return store.stream()

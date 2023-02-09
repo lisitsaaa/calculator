@@ -18,22 +18,22 @@ public final class ConsoleOperationController {
     public static void chooseHistoryOperation(ConsoleSession consoleSession) {
         write(INFORMATION_MENU);
 
-//        switch (readInteger()) {
-//            case 1 -> {
-//                List<Operation> allByUser = calculator.findAllByUser(consoleSession.getCurrentUser());
-//                allByUser.forEach(System.out::println);
-//            }
-//            case 2 -> {
-//                write(ID_MESSAGE);
-//                List<Operation> infoByInd = calculator.findByIdByUser(readInteger());
-//                infoByInd.forEach(System.out::println);
-//            }
+        switch (readInteger()) {
+            case 1 -> {
+                List<Operation> allByUser = calculator.findAllByUser(consoleSession.getCurrentUser());
+                allByUser.forEach(System.out::println);
+            }
+            case 2 -> {
+                write(ID_MESSAGE);
+                Optional<Operation> infoByInd = calculator.findByIdByUser(readInteger());
+                infoByInd.ifPresent(operation -> write(operation.toString()));
+            }
 //            case 3 -> calculator.removeAllByUser(consoleSession.getCurrentUser());
-//            case 4 -> {
-//                write(ID_MESSAGE);
-//                calculator.removeByIdByUser(readInteger());
-//            }
-//        }
+            case 4 -> {
+                write(ID_MESSAGE);
+                calculator.removeById(readInteger());
+            }
+        }
     }
     public static void createOperation(ConsoleSession consoleSession) {
         write(OPERATION_TYPE_MENU);

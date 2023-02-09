@@ -28,13 +28,14 @@ public final class ConsoleOperationController {
                 Optional<Operation> infoByInd = calculator.findByIdByUser(readInteger());
                 infoByInd.ifPresent(operation -> write(operation.toString()));
             }
-//            case 3 -> calculator.removeAllByUser(consoleSession.getCurrentUser());
+            case 3 -> calculator.removeAll();
             case 4 -> {
                 write(ID_MESSAGE);
                 calculator.removeById(readInteger());
             }
         }
     }
+
     public static void createOperation(ConsoleSession consoleSession) {
         write(OPERATION_TYPE_MENU);
         Optional<Operation.Type> type = readOperationType();

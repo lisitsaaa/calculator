@@ -84,10 +84,10 @@ public class CalculatorService {
     public Optional<Operation> findByIdByUser(int id) {
         return storage.findById(id);
     }
-//
-//    public void removeAllByUser(User user) {
-//        storage.removeAll(user.getId());
-//    }
+
+    public void removeAll() {
+        storage.removeAll();
+    }
 
     public void removeById(int id) {
         storage.removeById(id);

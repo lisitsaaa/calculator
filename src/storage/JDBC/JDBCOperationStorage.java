@@ -25,7 +25,7 @@ public class JDBCOperationStorage implements OperationStorage {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
             preparedStatement.setString(1, getNumbersString(operation.getNumbers()));
             preparedStatement.setDouble(2, operation.getResult());
-            preparedStatement.setString(3, String.valueOf(operation.getType()));
+            preparedStatement.setString(3, operation.getType().name());
             preparedStatement.setInt(4, operation.getOwner().getId());
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -42,7 +42,6 @@ public class JDBCOperationStorage implements OperationStorage {
         return allStr.toString();
     }
 
-
     @Override
     public List<Operation> findAll(int userId) {
         try (Connection connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD)) {
@@ -58,7 +57,6 @@ public class JDBCOperationStorage implements OperationStorage {
             }
             return operations;
         } catch (SQLException e) {
-//            throw new RuntimeException(e);
         }
         return new ArrayList<>();
     }
